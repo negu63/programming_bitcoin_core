@@ -55,7 +55,7 @@ class FieldElement:
 
     # tag::source3[]
     def __pow__(self, exponent):
-        n = exponent % (self.prime - 1)  # <1>
+        n = exponent % (self.prime - 1)
         num = pow(self.num, n, self.prime)
         return self.__class__(num, self.prime)
     # end::source3[]
