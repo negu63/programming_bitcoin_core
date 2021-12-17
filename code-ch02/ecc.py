@@ -179,15 +179,19 @@ class Point:
             x3 = s**2-x1-x2
             y3 = s*(x1-x3)-y1
             return self.__class__(x3, y3, self.a, self.b)
+
         # Case 3: self == other
         # Formula (x3,y3)=(x1,y1)+(x1,y1)
         # s=(3*x1**2+a)/(2*y1)
         # x3=s**2-2*x1
         # y3=s*(x1-x3)-y1
-
-        raise NotImplementedError
-
-
+        if self == other:
+            x1, y1, a, b = self.x, self.y, self.a, self.b
+            s = (3*x1**2 + a) / (2 * y1)
+            x3 = s**2 - 2*x1
+            y3 = s * (x1 - x3) - y1
+            return self.__class__(x3, y3, self.a, self.b)
+        
 class PointTest(TestCase):
 
     def test_ne(self):
