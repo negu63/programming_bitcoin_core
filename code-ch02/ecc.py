@@ -192,6 +192,9 @@ class Point:
             y3 = s * (x1 - x3) - y1
             return self.__class__(x3, y3, self.a, self.b)
         
+        if self == other and self.y == 0 * self.x:
+            return self.__class__(None, None, self.a, self.b)
+        
 class PointTest(TestCase):
 
     def test_ne(self):
