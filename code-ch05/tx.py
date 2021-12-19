@@ -125,7 +125,8 @@ class Tx:
         outputs = []
         for _ in range(num_outputs):
             outputs.append(TxOut.parse(s))
-        return cls(version, inputs, outputs, None, testnet=True)
+        locktime = little_endian_to_int(s.read(4))
+        return cls(version, inputs, outputs, locktime, testnet=True)
         
     # tag::source6[]
     def serialize(self):
