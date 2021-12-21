@@ -205,8 +205,12 @@ class Tx:
         # get the signature hash (z)
         # combine the current ScriptSig and the previous ScriptPubKey
         # evaluate the combined script
-        raise NotImplementedError
-
+        tx_in = self.tx_ins[input_index]
+        script_pubkey = tx_in.script_pubkey(testnet=self.testnet)
+        z = self.sig_hash(input_index)
+        combined = tx_in.script_sig + script_pubkey
+        return combined.evaluate(z)
+        
     # tag::source2[]
     def verify(self):
         '''Verify this transaction'''
