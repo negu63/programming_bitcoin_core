@@ -230,9 +230,14 @@ class Tx:
         # initialize a new script with [sig, sec] as the cmds
         # change input's script_sig to new script
         # return whether sig is valid using self.verify_input
-        raise NotImplementedError
-
-
+        z = self.sig_hash(input_index)
+        der = private_key.sign(z).der()
+        sig = der + SIGHASH_ALL.to_bytes(1, 'big')
+        sec = private_key.point.sec()
+        script_sig = Script([sig, sec])
+        self.tx_ins[input_index].script_sig = script_sig
+        return self.serialize().hex()
+        
 class TxIn:
 
     def __init__(self, prev_tx, prev_index, script_sig=None, sequence=0xffffffff):
