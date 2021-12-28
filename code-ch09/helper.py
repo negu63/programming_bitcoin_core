@@ -157,8 +157,12 @@ def calculate_new_bits(previous_bits, time_differential):
     # the new target is the previous target * time differential / two weeks
     # if the new target is bigger than MAX_TARGET, set to MAX_TARGET
     # convert the new target to bits
-    raise NotImplementedError
-
+    if time_differential > TWO_WEEKS * 4:
+        time_differential = TWO_WEEKS * 4
+    elif time_differential < TWO_WEEKS // 4:
+        time_differential = TWO_WEEKS // 4
+    new_target = bits_to_target(previous_bits) * time_differential // TWO_WEEKS
+    return target_to_bits(new_target)
 
 class HelperTest(TestCase):
 
