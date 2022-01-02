@@ -5,6 +5,8 @@ from unittest import TestCase
 
 from helper import (
     bytes_to_bit_field,
+    encode_varint,
+    int_to_little_endian,
     little_endian_to_int,
     merkle_parent,
     read_varint,
@@ -185,18 +187,31 @@ class MerkleBlock:
     def parse(cls, s):
         '''Takes a byte stream and parses a merkle block. Returns a Merkle Block object'''
         # version - 4 bytes, Little-Endian integer
+        version = little_endian_to_int(s.read(4))
         # prev_block - 32 bytes, Little-Endian (use [::-1])
+        prev_block = s.read(32)[::-1]
         # merkle_root - 32 bytes, Little-Endian (use [::-1])
+        merkle_root = s.read(32)[::-1]
         # timestamp - 4 bytes, Little-Endian integer
+        timestamp = little_endian_to_int(s.read(4))
         # bits - 4 bytes
+        bits = s.read(4)
         # nonce - 4 bytes
+        nonce = s.read(4)
         # total transactions in block - 4 bytes, Little-Endian integer
+        total = little_endian_to_int(s.read(4))
         # number of transaction hashes - varint
+        number_of_tx = read_varint(s)
         # each transaction is 32 bytes, Little-Endian
+        hashes = []
+        for i in range(number_of_tx):
+            hashes.append(s.read(32)[::-1])
         # length of flags field - varint
+        length_of_flags = read_varint(s)
         # read the flags field
+        flags = s.read(length_of_flags)
         # initialize class
-        raise NotImplementedError
+        return cls(version, prev_block, merkle_root, timestamp, bits, nonce, total, hashes, flags)
 
     def is_valid(self):
         '''Verifies whether the merkle tree information validates to the merkle root'''
