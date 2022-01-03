@@ -41,13 +41,18 @@ class BloomFilter:
     def filterload(self, flag=1):
         '''Return the filterload message'''
         # start the payload with the size of the filter in bytes
+        payload = encode_varint(len(self.filter_bytes()))
         # next add the bit field using self.filter_bytes()
+        payload += self.filter_bytes()
         # function count is 4 bytes little endian
+        payload += int_to_little_endian(self.function_count, 4)
         # tweak is 4 bytes little endian
+        payload += int_to_little_endian(self.tweak, 4)
         # flag is 1 byte little endian
+        payload += int_to_little_endian(flag, 1)
         # return a GenericMessage whose command is b'filterload'
         # and payload is what we've calculated
-        raise NotImplementedError
+        return GenericMessage(b'filterload', payload)
 
 
 class BloomFilterTest(TestCase):
